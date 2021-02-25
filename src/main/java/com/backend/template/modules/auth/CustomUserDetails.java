@@ -1,19 +1,22 @@
 package com.backend.template.modules.auth;
 
+import java.util.Collection;
+import java.util.Collections;
 
 import com.backend.template.modules.user.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
+
+    static final long serialVersionUID = 42L;
 
     User user;
 
