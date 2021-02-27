@@ -17,6 +17,8 @@ public class UserService {
 
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        user = userRepo.save(user);
+        user.setPassword(null);
+        return user;
     }
 }
