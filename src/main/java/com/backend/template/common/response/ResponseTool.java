@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseTool {
-    public static ResponseEntity<APIResponse> CREATE_OK(Object data) {
+    public static ResponseEntity<APIResponse> POST_OK(Object data) {
         return new ResponseEntity<APIResponse>(new APIResponse(201, "Created", data), HttpStatus.CREATED);
     }
 
