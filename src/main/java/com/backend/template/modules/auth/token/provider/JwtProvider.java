@@ -1,6 +1,7 @@
 package com.backend.template.modules.auth.token.provider;
 
 
+import com.backend.template.config.EnvConst;
 import com.backend.template.modules.auth.CustomUserDetails;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,9 @@ import java.util.Date;
 @Component
 @Slf4j
 public class JwtProvider {
-    private final String JWT_SECRET = "lodaaaaaa";
+    private final String JWT_SECRET = EnvConst.JWT_SECRET;
 
-    private final long JWT_EXPIRATION = 604800000L;
+    private final long JWT_EXPIRATION = EnvConst.JWT_EXPIRATION;
 
     public String generateToken(CustomUserDetails userDetails) {
         Date now = new Date();

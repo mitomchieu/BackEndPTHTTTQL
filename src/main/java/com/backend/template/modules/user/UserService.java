@@ -26,11 +26,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
             user = userRepo.save(user);
-            user.setPassword(null);
         } catch (DataIntegrityViolationException ex) {
             String message = "Username " + user.getUsername() + " have been used";
             throw new BackendError(HttpStatus.BAD_REQUEST, message);
         }
+        user.setPassword(null);
         return user;
     }
 }
