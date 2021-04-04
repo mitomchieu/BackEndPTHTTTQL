@@ -1,5 +1,8 @@
 package com.backend.template.modules.auth;
 
+
+import com.backend.template.common.exception.handler.CustomRestExceptionHandler;
+import com.backend.template.modules.auth.filter.GuestAuthenticationFilter;
 import com.backend.template.modules.auth.filter.JwtAuthenticationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +13,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.UUID;
 
 @Configuration
 public class SecurityConfig {
@@ -23,12 +29,21 @@ public class SecurityConfig {
     @EnableWebSecurity
     @Configuration
     public static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Autowired
+        private CustomRestExceptionHandler customRestExceptionHandler;
+
         @Autowired
         private CustomUserDetailsService customUserDetailsService;
 
         @Bean
         public JwtAuthenticationFilter jwtAuthenticationFilter() {
             return new JwtAuthenticationFilter();
+        }
+
+        @Bean
+        public GuestAuthenticationFilter guestAuthenticationFilter() {
+            return new GuestAuthenticationFilter();
         }
 
         @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -58,13 +73,22 @@ public class SecurityConfig {
         };
 
         @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers(AUTH_WHITELIST);
+        }
+
+        @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable().cors().and().authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+
+            http.exceptionHandling()
+                    .authenticationEntryPoint(customRestExceptionHandler)
+                    .and().csrf().disable().cors().and().authorizeRequests()//.antMatchers(AUTH_WHITELIST).permitAll()
                     .antMatchers("/auth/login").permitAll()
-                    .antMatchers("/user").permitAll()// Cho phép tất cả mọi người truy cập vào địa chỉ này
                     .antMatchers("/user/register").permitAll()
-                    .anyRequest().authenticated(); // Tất cả các request khác đều cần phải xác thực mới được truy cập
-            http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                    .anyRequest().authenticated()
+                    .and()
+                    .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(guestAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         }
     }
 }

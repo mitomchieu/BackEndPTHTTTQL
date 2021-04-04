@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import com.backend.template.modules.user.model.User;
 
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 

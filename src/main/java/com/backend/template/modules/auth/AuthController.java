@@ -2,11 +2,10 @@ package com.backend.template.modules.auth;
 
 import com.backend.template.common.response.ResponseTool;
 import com.backend.template.common.response.model.APIResponse;
-import com.backend.template.modules.auth.model.LoginResponse;
+import com.backend.template.modules.auth.dto.LoginResponseDTO;
 import com.backend.template.modules.auth.token.provider.JwtProvider;
 import com.backend.template.modules.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +33,7 @@ public class AuthController {
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        LoginResponse loginResponse = new LoginResponse();
+        LoginResponseDTO loginResponse = new LoginResponseDTO();
         loginResponse.setUsername(user.getUsername());
         loginResponse.setJwt(jwt);
         return ResponseTool.POST_OK(loginResponse);

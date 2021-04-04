@@ -27,7 +27,7 @@ public class UserService {
         try {
             user = userRepo.save(user);
         } catch (DataIntegrityViolationException ex) {
-            String message = "Username " + user.getUsername() + " have been used";
+            String message = ex.getMessage();
             throw new BackendError(HttpStatus.BAD_REQUEST, message);
         }
         user.setPassword(null);

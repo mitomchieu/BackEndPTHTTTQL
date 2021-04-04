@@ -3,8 +3,12 @@ package com.backend.template.common.exception.handler;
 import com.backend.template.common.exception.dto.ApiErrorDTO;
 
 import com.backend.template.common.exception.BackendError;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,12 +16,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
-public class CustomRestExceptionHandler  {
+public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
 
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -62,4 +71,17 @@ public class CustomRestExceptionHandler  {
         return response;
     }
 
+    @Override
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+        BackendError error = new BackendError(HttpStatus.UNAUTHORIZED, e.getMessage());
+        e.printStackTrace();
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseEntity<?> response = handleCustomBackendError(error);
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        httpServletResponse.getWriter().print(mapper.writeValueAsString(response.getBody()));
+        httpServletResponse.setStatus(response.getStatusCodeValue());
+        httpServletResponse.flushBuffer();
+        return;
+    }
 }
