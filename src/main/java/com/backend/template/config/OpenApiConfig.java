@@ -20,8 +20,6 @@ public class OpenApiConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                                 .in(SecurityScheme.In.HEADER).name("Authorization")))
-                .info(new Info().title("App API").version("snapshot"))
-                .addSecurityItem(new SecurityRequirement()
-                        .addList("bearer-jwt", Arrays.asList("read", "write")));
+                .info(new Info().title("App API").version("snapshot"));
     }
 }

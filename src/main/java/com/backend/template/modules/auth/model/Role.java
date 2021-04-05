@@ -3,6 +3,7 @@ package com.backend.template.modules.auth.model;
 
 import com.backend.template.common.ConstSetting.TableName;
 import com.backend.template.modules.user.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +20,16 @@ import java.util.Set;
 @NoArgsConstructor
 public class Role {
 
+    public Role(String name) {
+        this.name = name;
+    }
+
     @Id
     @Column()
     private String name;
 
-    @OneToMany(mappedBy = TableName.ROLES_DB, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = TableName.ROLES_DB)
+    @JsonIgnore
     @Schema(hidden = true)
     @ToString.Exclude
     private Set<User> user;

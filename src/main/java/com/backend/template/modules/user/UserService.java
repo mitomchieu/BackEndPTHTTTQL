@@ -26,11 +26,15 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
             user = userRepo.save(user);
-        } catch (DataIntegrityViolationException ex) {
+        } catch (Exception ex) {
             String message = ex.getMessage();
             throw new BackendError(HttpStatus.BAD_REQUEST, message);
         }
         user.setPassword(null);
         return user;
+    }
+
+    public User getByUsername(String username) {
+        return userRepo.findByUsername(username);
     }
 }
