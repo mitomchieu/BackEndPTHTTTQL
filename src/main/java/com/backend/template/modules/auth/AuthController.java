@@ -1,13 +1,17 @@
 package com.backend.template.modules.auth;
 
+import com.backend.template.common.ConstSetting.ERoles;
+import com.backend.template.common.annotations.api.ApiCommonResponse;
 import com.backend.template.common.exception.BackendError;
 import com.backend.template.common.response.ResponseTool;
 import com.backend.template.common.response.model.APIResponse;
+import com.backend.template.modules.auth.dto.LoginRequestDTO;
 import com.backend.template.modules.auth.dto.LoginResponseDTO;
 import com.backend.template.modules.auth.model.Role;
 import com.backend.template.modules.auth.repository.RoleRepositoty;
 import com.backend.template.modules.auth.token.provider.JwtProvider;
 import com.backend.template.modules.user.model.User;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -27,6 +31,7 @@ import javax.xml.catalog.Catalog;
 
 @RestController
 @RequestMapping(path = "auth")
+@ApiCommonResponse
 public class AuthController {
 
     @Autowired
@@ -41,16 +46,17 @@ public class AuthController {
 
     @EventListener
     public void seed(ContextRefreshedEvent event) {
-        Role admin = new Role("ADMIN");
-        Role user = new Role("USER");
-        Role guest = new Role("GUEST");
+        Role admin = new Role(ERoles.ADMIN);
+        Role user = new Role(ERoles.USER);
+        Role guest = new Role(ERoles.GUEST);
         roleRepositoty.save(admin);
         roleRepositoty.save(user);
         roleRepositoty.save(guest);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<APIResponse> login(@RequestBody User user) throws BackendError{
+    @Operation(description = "Login")
+    public ResponseEntity<APIResponse> login(@RequestBody LoginRequestDTO user) throws BackendError{
         Authentication authentication;
         try {
             authentication = authenticationManager

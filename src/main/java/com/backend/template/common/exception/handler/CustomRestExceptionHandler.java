@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
@@ -16,11 +17,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,6 @@ import java.util.Map;
 public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
 
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error(ex.getMessage());
         ex.printStackTrace();
@@ -44,37 +42,39 @@ public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO();
         apiErrorDTO.setMessage(errors.toString());
         apiErrorDTO.setStatus(HttpStatus.BAD_REQUEST);
-        ResponseEntity<ApiErrorDTO> response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiErrorDTO);
-        return response;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiErrorDTO);
     }
 
-    @ExceptionHandler(value = BackendError.class)
     public ResponseEntity<ApiErrorDTO> handleCustomBackendError(BackendError ex) {
         log.error(ex.getMessage());
         ex.printStackTrace();
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO();
         apiErrorDTO.setMessage(ex.getMessage());
         apiErrorDTO.setStatus(ex.getStatusCode());
-        ResponseEntity<ApiErrorDTO> response = ResponseEntity.status(ex.getStatusCode()).body(apiErrorDTO);
-        return response;
+        return ResponseEntity.status(ex.getStatusCode()).body(apiErrorDTO);
     }
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiErrorDTO> handleAll(Exception ex) {
-        System.out.println(ex);
+        System.out.println(ex.getClass());
+        if (ex instanceof AccessDeniedException) {
+            ex.printStackTrace();
+            return handleCustomBackendError(new BackendError(HttpStatus.UNAUTHORIZED, ex.getMessage()));
+        }
+        if (ex instanceof BackendError) {
+            return  handleCustomBackendError((BackendError) ex);
+        }
+        if (ex instanceof  MethodArgumentNotValidException) {
+            return handleValidationExceptions((MethodArgumentNotValidException) ex);
+        }
         log.error(ex.getMessage());
         ex.printStackTrace();
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO();
         apiErrorDTO.setMessage(ex.getMessage());
-        apiErrorDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        ResponseEntity<ApiErrorDTO> response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiErrorDTO);
-        return response;
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiErrorDTO);
     }
 
-    @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        BackendError error = new BackendError(HttpStatus.UNAUTHORIZED, e.getMessage());
-        e.printStackTrace();
+    void servletExceptionWriter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, BackendError error) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ResponseEntity<?> response = handleCustomBackendError(error);
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -82,6 +82,12 @@ public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
         httpServletResponse.getWriter().print(mapper.writeValueAsString(response.getBody()));
         httpServletResponse.setStatus(response.getStatusCodeValue());
         httpServletResponse.flushBuffer();
-        return;
+    }
+
+    @Override
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
+        BackendError error = new BackendError(HttpStatus.UNAUTHORIZED, e.getMessage());
+        e.printStackTrace();
+        this.servletExceptionWriter(httpServletRequest, httpServletResponse, error);
     }
 }

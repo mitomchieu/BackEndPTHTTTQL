@@ -1,6 +1,7 @@
 package com.backend.template.modules.auth.filter;
 
 
+import com.backend.template.common.ConstSetting.ERoles;
 import com.backend.template.modules.auth.CustomUserDetails;
 import com.backend.template.modules.user.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class GuestAuthenticationFilter extends OncePerRequestFilter {
         CustomUserDetails userDetails = new CustomUserDetails();
         userDetails.setUser(user);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            user.getUsername(), null, Collections.singleton(new SimpleGrantedAuthority("GUEST")));
+            user.getUsername(), null, Collections.singleton(new SimpleGrantedAuthority(ERoles.GUEST.toString())));
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(httpServletRequest, httpServletResponse);

@@ -28,11 +28,10 @@ public class User {
 
     @Column()
     @NotNull
-    @JsonIgnore
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "role", nullable = false)
     @Schema(hidden = true)
-    private Role roles;
+    private Role role;
 }

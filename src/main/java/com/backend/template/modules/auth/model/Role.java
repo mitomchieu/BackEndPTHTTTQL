@@ -1,6 +1,7 @@
 package com.backend.template.modules.auth.model;
 
 
+import com.backend.template.common.ConstSetting.ERoles;
 import com.backend.template.common.ConstSetting.TableName;
 import com.backend.template.modules.user.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,15 +21,16 @@ import java.util.Set;
 @NoArgsConstructor
 public class Role {
 
-    public Role(String name) {
+    public Role(ERoles name) {
         this.name = name;
     }
 
     @Id
     @Column()
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private ERoles name;
 
-    @OneToMany(mappedBy = TableName.ROLES_DB)
+    @OneToMany(mappedBy = "role")
     @JsonIgnore
     @Schema(hidden = true)
     @ToString.Exclude

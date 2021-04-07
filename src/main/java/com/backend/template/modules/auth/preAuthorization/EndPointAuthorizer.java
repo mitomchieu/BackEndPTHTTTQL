@@ -1,5 +1,6 @@
 package com.backend.template.modules.auth.preAuthorization;
 
+import com.backend.template.common.ConstSetting.ERoles;
 import com.backend.template.common.exception.BackendError;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.implementation.bytecode.Throw;
@@ -16,16 +17,24 @@ import java.util.Objects;
 @Service("EndPointAuthorizer")
 @Slf4j
 public class EndPointAuthorizer {
-    public boolean authorizer(String[] roles) throws BackendError {
+    public boolean authorizer(ERoles[] roles) throws BackendError {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.isNull(authentication)) {
             throw new BackendError(HttpStatus.UNAUTHORIZED,  "Not allow");
         }
-        System.out.println("debug");
+
         Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
+        if (roles.length == 0 ) {
+            for (GrantedAuthority authority : authorities) {
+                if (authority.getAuthority().equals(ERoles.GUEST)) {
+                    return false;
+                }
+            }
+            return true;
+        }
         for (GrantedAuthority authority : authorities) {
             for (int i = 0; i < roles.length; i++) {
-                if(authority.getAuthority().equals(roles[i])) {
+                if(authority.getAuthority().equals(roles[i].toString())) {
                     return true;
                 }
             }
