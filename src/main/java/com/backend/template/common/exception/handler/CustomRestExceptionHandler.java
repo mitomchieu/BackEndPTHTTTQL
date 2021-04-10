@@ -75,6 +75,7 @@ public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
     }
 
     void servletExceptionWriter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, BackendError error) throws IOException {
+        log.info(httpServletRequest.toString());
         ObjectMapper mapper = new ObjectMapper();
         ResponseEntity<?> response = handleCustomBackendError(error);
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);

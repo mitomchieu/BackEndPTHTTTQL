@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 
 import com.backend.template.common.ConstSetting.TableName;
 import com.backend.template.modules.auth.model.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -67,7 +67,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         LoginResponseDTO loginResponse = new LoginResponseDTO();
-        loginResponse.setJwt(jwt);
+        loginResponse.setAccess_token(jwt);
         return ResponseTool.POST_OK(loginResponse);
     }
 }
