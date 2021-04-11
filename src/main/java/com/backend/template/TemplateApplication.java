@@ -2,7 +2,7 @@ package com.backend.template;
 
 import java.util.Collections;
 
-import com.backend.template.config.EnvConst;
+import com.backend.template.base.config.EnvConst;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
