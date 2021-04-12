@@ -2,9 +2,9 @@ package com.backend.template.modules.core.user;
 
 import com.backend.template.base.common.BaseService;
 import com.backend.template.base.common.exception.BackendError;
+import com.backend.template.modules.core.user.model.QUser;
 import com.backend.template.modules.core.user.model.User;
 import com.backend.template.modules.core.user.repository.UserRepository;
-import com.backend.template.modules.user.model.QUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,15 +32,11 @@ public class UserService extends BaseService<QUser> {
     }
 
     public User createUser(User user) throws BackendError {
-        if (countByUsername(user.getUsername()) > 0) {
-            throw new BackendError(HttpStatus.BAD_REQUEST, "Username have been used");
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
             user = userRepo.save(user);
         } catch (Exception ex) {
-            String message = ex.getMessage();
-            throw new BackendError(HttpStatus.BAD_REQUEST, message);
+            throw new BackendError(HttpStatus.BAD_REQUEST, "Duplicate username");
         }
         user.setPassword(null);
         return user;
