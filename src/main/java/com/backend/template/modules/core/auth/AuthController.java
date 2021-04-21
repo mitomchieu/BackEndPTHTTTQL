@@ -40,6 +40,10 @@ public class AuthController {
     @Autowired
     private RoleRepositoty roleRepositoty;
 
+    public  static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getPrincipal().toString();
+    }
 
     @EventListener
     public void seed(ContextRefreshedEvent event) {

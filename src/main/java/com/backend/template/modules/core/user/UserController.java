@@ -57,9 +57,8 @@ public class UserController {
     }
 
     @GetMapping(path =  "get-user-by-username/{username}", produces =  MediaType.APPLICATION_JSON_VALUE)
-    @Authorization
     @Operation(description =  "Get profile by id, role = ADMIN", summary = "Get by username", security = @SecurityRequirement(name = "bearer-jwt" ) )
-    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN'})")
+    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIResponse> getByUsername(@PathVariable String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication.getName());

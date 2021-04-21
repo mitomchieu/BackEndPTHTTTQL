@@ -16,6 +16,8 @@ public class UserService extends BaseService<QUser> {
     UserRepository userRepo;
     PasswordEncoder passwordEncoder;
 
+
+
     @Autowired
     UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         super(QUser.user);

@@ -1,6 +1,7 @@
 package com.backend.template.modules.core.user.model;
 
 import com.backend.template.base.common.ConstSetting.TableName;
+import com.backend.template.domain.QuanLyQuy.model.GiaoDichEntity;
 import com.backend.template.modules.core.auth.model.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity

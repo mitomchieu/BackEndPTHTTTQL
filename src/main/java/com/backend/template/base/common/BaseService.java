@@ -7,12 +7,14 @@ import javax.persistence.PersistenceContext;
 
 
 public class BaseService<T> {
+
     @PersistenceContext
-    protected EntityManager em;
-    protected JPAQueryFactory getJPAQueryFactory() {
+    public EntityManager em;
+
+    public JPAQueryFactory getJPAQueryFactory() {
         return new JPAQueryFactory(em);
     }
-    protected T qModel;
+    public T qModel;
 
     public BaseService (T qModel) {
         this.qModel = qModel;
