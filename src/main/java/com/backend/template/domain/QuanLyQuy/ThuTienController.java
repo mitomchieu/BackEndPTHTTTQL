@@ -1,6 +1,7 @@
 package com.backend.template.domain.QuanLyQuy;
 
 import com.backend.template.base.common.annotations.api.ApiCommonResponse;
+import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.ResponseTool;
 import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.base.common.response.model.APIResponse;
@@ -65,7 +66,8 @@ public class ThuTienController {
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAll(
             @ParameterObject Pageable pageable
-            ) {
+            ) throws BackendError {
+        System.out.println(pageable.getSort());
         APIPagingResponse result = this.thuTienService.getAll(pageable);
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
