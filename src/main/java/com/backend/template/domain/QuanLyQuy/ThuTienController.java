@@ -65,10 +65,11 @@ public class ThuTienController {
     @Operation(summary = "Create tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAll(
-            @ParameterObject Pageable pageable
+            @ParameterObject Pageable pageable,
+            @RequestParam(value = "search", required = false) String search
             ) throws BackendError {
-        System.out.println(pageable.getSort());
-        APIPagingResponse result = this.thuTienService.getAll(pageable);
+        System.out.println(search);
+        APIPagingResponse result = this.thuTienService.getAll(pageable, search);
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 

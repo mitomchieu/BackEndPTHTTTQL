@@ -1,11 +1,11 @@
 package com.backend.template.base.common;
 
 import com.backend.template.base.common.exception.BackendError;
+import com.ibm.icu.impl.locale.AsciiUtil;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springdoc.core.converters.models.Pageable;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class BaseService<T> {
@@ -24,6 +26,9 @@ public class BaseService<T> {
     public JPAQueryFactory getJPAQueryFactory() {
         return new JPAQueryFactory(em);
     }
+
+    public PathBuilder entityPathBuilder;
+
     public T qModel;
 
     public BaseService (T qModel) {
@@ -66,6 +71,38 @@ public class BaseService<T> {
             jpaQuery.limit(size);
         }
         return  jpaQuery;
+    }
+
+    public BooleanExpression getSingleSearchPredicate(String key, String operation, Object value) {
+        if (AsciiUtil.isNumericString(value.toString())) {
+            NumberPath<Integer> path = entityPathBuilder.getNumber(key, Integer.class);
+            int val = Integer.parseInt(value.toString());
+            if (operation.equals(":")) {
+                return path.eq(val);
+            }
+            if (operation.equals(">")) {
+                return path.goe(val);
+            }
+            if (operation.equals("<")) {
+                return  path.loe(val);
+            }
+        } else {
+            StringPath path = entityPathBuilder.getString(key);
+            return path.stringValue().containsIgnoreCase(value.toString().trim());
+        }
+        return null;
+    }
+
+    public BooleanExpression getMultiSearchPredicate(String search) {
+        BooleanExpression result = Expressions.asBoolean(true).isTrue();
+        if (search != null) {
+            Pattern pattern = Pattern.compile("(\\w+)(:|<|>)(\\w+)(\\s+)?");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                result = result.and(getSingleSearchPredicate(matcher.group(1), matcher.group(2), matcher.group(3)));
+            }
+        }
+        return  result;
     }
 
 

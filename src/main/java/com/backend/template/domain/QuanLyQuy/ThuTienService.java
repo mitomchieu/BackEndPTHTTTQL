@@ -8,20 +8,17 @@ import com.backend.template.domain.QuanLyQuy.model.QThuTienEntity;
 import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import com.backend.template.domain.QuanLyQuy.repository.ThuTienRepository;
 import com.backend.template.modules.core.auth.AuthController;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
+import com.backend.template.modules.core.user.UserService;
+import com.backend.template.modules.core.user.model.User;
+import com.ibm.icu.impl.locale.AsciiUtil;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
@@ -29,24 +26,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("ThuTienService")
 public class ThuTienService extends BaseService<QThuTienEntity> {
 
 
     private ThuTienRepository thuTienRepository;
+    private UserService userService;
     @Autowired
-    public ThuTienService(ThuTienRepository thuTienRepository) {
+    public ThuTienService(
+            ThuTienRepository thuTienRepository,
+            @Qualifier("userService") UserService userService) {
         super(QThuTienEntity.thuTienEntity);
+        this.entityPathBuilder =  new PathBuilder<>(ThuTienEntity.class, "thuTienEntity");
         this.thuTienRepository = thuTienRepository;
+        this.userService = userService;
     }
 
     @Transactional
     public  ThuTienEntity createThuTienEntity(ThuTienEntity thuTienEntity) {
-        String userCreated = AuthController.getCurrentUsername();
+        String usernameCreated = AuthController.getCurrentUsername();
+        User user = this.userService.getByUsername(usernameCreated);
         em.joinTransaction();
         GiaoDichEntity giaoDichEntity = thuTienEntity;
-        giaoDichEntity.setUserCreated(userCreated);
+        giaoDichEntity.setUserCreated(user);
         em.persist(giaoDichEntity);
         return getJPAQueryFactory().selectFrom(qModel).where(qModel.maGiaoDich.eq(thuTienEntity.getMaGiaoDich())).fetchOne();
     }
@@ -55,10 +61,17 @@ public class ThuTienService extends BaseService<QThuTienEntity> {
         return  getJPAQueryFactory().selectFrom(qModel).where(qModel.maGiaoDich.eq(maGiaoDich)).fetchOne();
     }
 
-    public APIPagingResponse getAll(Pageable pageable) throws BackendError {
-        JPAQuery  jpaQuery = getJPAQueryFactory().selectFrom(qModel);
-        final int total = (int) jpaQuery.fetchCount();
-        jpaQuery = getJPAQueryFactory().selectFrom(qModel);
+    public APIPagingResponse getAll(
+            Pageable pageable,
+            String search
+    ) throws BackendError {
+        JPAQuery  jpaQuery = getJPAQueryFactory().selectFrom(qModel)
+                .fetchAll()
+                .where(getMultiSearchPredicate(search));
+        JPAQuery jpaQueryCount = (JPAQuery) jpaQuery.clone();
+
+        final int total = (int) jpaQueryCount.fetchCount();
+
         BaseService.queryPagable(jpaQuery, pageable, qModel);
         List<ThuTienEntity> result = jpaQuery.select(qModel).fetch();
         return  new APIPagingResponse(Collections.singletonList(result), total);

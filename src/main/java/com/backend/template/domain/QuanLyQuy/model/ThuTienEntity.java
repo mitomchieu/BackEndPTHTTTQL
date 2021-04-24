@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 public class ThuTienEntity extends GiaoDichEntity {
-    ThuTienEntity(String maGiaoDich, String nguoiNop, Date thoiGianGiaoDich, Date thoiGianHachToan, String lyDoNop, Long tongTien, String user) {
+    ThuTienEntity(String maGiaoDich, String nguoiNop, Date thoiGianGiaoDich, Date thoiGianHachToan, String lyDoNop, Long tongTien, User user) {
         super(maGiaoDich, nguoiNop, thoiGianGiaoDich, thoiGianHachToan, lyDoNop, tongTien, ELoaiGiaoDich.THUTIEN, user, null);
     }
 

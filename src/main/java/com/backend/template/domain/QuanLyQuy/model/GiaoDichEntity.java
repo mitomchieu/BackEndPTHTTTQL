@@ -4,6 +4,7 @@ import com.backend.template.modules.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -49,8 +50,9 @@ public class GiaoDichEntity {
     @Column(name = "loaiGiaoDich")
     protected  ELoaiGiaoDich loaiGiaoDich;
 
-    @Column
-    protected  String userCreated;
+    @ManyToOne()
+    @JoinColumn(name = "userCreated")
+    protected  User userCreated;
 
     @OneToMany(mappedBy = "giaoDich")
     protected Set<HachToanEntity> danhSachHachToan;
