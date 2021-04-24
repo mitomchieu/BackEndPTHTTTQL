@@ -1,6 +1,7 @@
 package com.backend.template.base.common;
 
 import com.backend.template.base.common.exception.BackendError;
+import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import com.ibm.icu.impl.locale.AsciiUtil;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -13,6 +14,12 @@ import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,7 +59,6 @@ public class BaseService<T> {
         } catch ( Exception e) {
             throw new BackendError(HttpStatus.BAD_REQUEST, "Paging not valid format");
         }
-
     }
 
     public static JPAQuery<?> queryPagable(JPAQuery jpaQuery, Pageable pageable, Path<?> model) throws BackendError {
@@ -72,9 +78,37 @@ public class BaseService<T> {
         }
         return  jpaQuery;
     }
+    public String baseModelClassName = ThuTienEntity.class.getName();
+
+    public List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            fields.addAll(getAllFields(type.getSuperclass()));
+        }
+
+        return fields;
+    }
+
+    public Class getTypeOfFieldObject(String key) {
+        try {
+            Class sampleClass = Class.forName(baseModelClassName);
+            List<Field> allFields = this.getAllFields(sampleClass);
+            for (Field field : allFields) {
+                if (field.getName().equals(key)) {
+                    return field.getType();
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return String.class;
+    }
 
     public BooleanExpression getSingleSearchPredicate(String key, String operation, Object value) {
-        if (AsciiUtil.isNumericString(value.toString())) {
+        Class type = this.getTypeOfFieldObject(key);
+        if (type.equals(Integer.class)) {
             NumberPath<Integer> path = entityPathBuilder.getNumber(key, Integer.class);
             int val = Integer.parseInt(value.toString());
             if (operation.equals(":")) {
@@ -86,24 +120,49 @@ public class BaseService<T> {
             if (operation.equals("<")) {
                 return  path.loe(val);
             }
-        } else {
+        }
+        if (type.equals(Date.class)) {
+            DatePath path = entityPathBuilder.getDate(key, Date.class);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                TimeExpression<Date> fieldDate = Expressions.asTime(simpleDateFormat.parse(value.toString()));
+                if (operation.equals(":")) {
+                    return path.eq(fieldDate);
+                }
+                if (operation.equals("<")) {
+                    return  path.loe(fieldDate);
+                }
+                if (operation.equals(">")) {
+                    return path.goe(fieldDate);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return  path.stringValue().equalsIgnoreCase(value.toString());
+        }
+        if ( type.equals(String.class)) {
             StringPath path = entityPathBuilder.getString(key);
             return path.stringValue().containsIgnoreCase(value.toString().trim());
+        }
+        if (type.isInstance(Enum.class) || type.equals(Enum.class)) {
+            EnumPath path = entityPathBuilder.getEnum(key, Enum.class);
+            return path.stringValue().equalsIgnoreCase(value.toString());
         }
         return null;
     }
 
-    public BooleanExpression getMultiSearchPredicate(String search) {
+    public BooleanExpression getMultiSearchPredicate(List<String> searchList) {
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
-        if (search != null) {
-            Pattern pattern = Pattern.compile("(\\w+)(:|<|>)(\\w+)(\\s+)?");
-            Matcher matcher = pattern.matcher(search + ",");
+        if (searchList == null) {
+            return result;
+        }
+        for (String search : searchList) {
+            Pattern pattern = Pattern.compile("(\\w+)(:|<|>)(.+)");
+            Matcher matcher = pattern.matcher(search);
             while (matcher.find()) {
                 result = result.and(getSingleSearchPredicate(matcher.group(1), matcher.group(2), matcher.group(3)));
             }
         }
         return  result;
     }
-
-
 }

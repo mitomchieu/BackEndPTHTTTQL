@@ -1,6 +1,7 @@
 package com.backend.template.domain.QuanLyQuy;
 
 import com.backend.template.base.common.BaseService;
+import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.domain.QuanLyQuy.model.GiaoDichEntity;
@@ -61,13 +62,21 @@ public class ThuTienService extends BaseService<QThuTienEntity> {
         return  getJPAQueryFactory().selectFrom(qModel).where(qModel.maGiaoDich.eq(maGiaoDich)).fetchOne();
     }
 
+    public List<ThuTienEntity> testGet() {
+        JPAQuery jpaQuery = getJPAQueryFactory().selectFrom(qModel);
+        EnumPath path = entityPathBuilder.getEnum("loaiGiaoDich", Enum.class);
+        jpaQuery.where(path.stringValue().eq("THUTIEN"));
+        jpaQuery.select(qModel);
+        return jpaQuery.fetch();
+    }
+
     public APIPagingResponse getAll(
             Pageable pageable,
-            String search
+            SearchParameter searchParameter
     ) throws BackendError {
         JPAQuery  jpaQuery = getJPAQueryFactory().selectFrom(qModel)
                 .fetchAll()
-                .where(getMultiSearchPredicate(search));
+                .where(getMultiSearchPredicate(searchParameter.getSearch()));
         JPAQuery jpaQueryCount = (JPAQuery) jpaQuery.clone();
 
         final int total = (int) jpaQueryCount.fetchCount();

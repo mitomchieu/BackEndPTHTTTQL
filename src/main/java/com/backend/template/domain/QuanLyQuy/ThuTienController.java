@@ -1,5 +1,6 @@
 package com.backend.template.domain.QuanLyQuy;
 
+import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.annotations.api.ApiCommonResponse;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.ResponseTool;
@@ -8,6 +9,7 @@ import com.backend.template.base.common.response.model.APIResponse;
 import com.backend.template.domain.QuanLyQuy.dto.CreateGiaoDichDTO;
 import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springdoc.core.converters.models.Pageable;
@@ -60,16 +62,20 @@ public class ThuTienController {
         return  ResponseTool.GET_OK(this.thuTienService.getByMaGiaoDich(maGiaoDich));
     }
 
+    @GetMapping(path = "test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public  ResponseEntity<APIResponse> getTest() {
+        return ResponseTool.GET_OK(this.thuTienService.testGet());
+    }
+
 
     @GetMapping(path = "get-all}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAll(
             @ParameterObject Pageable pageable,
-            @RequestParam(value = "search", required = false) String search
+            @ParameterObject SearchParameter searchParameter
             ) throws BackendError {
-        System.out.println(search);
-        APIPagingResponse result = this.thuTienService.getAll(pageable, search);
+        APIPagingResponse result = this.thuTienService.getAll(pageable, searchParameter);
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
