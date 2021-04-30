@@ -1,7 +1,9 @@
 package com.backend.template.base.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 
+import lombok.extern.log4j.Log4j;
+
+import java.util.Map;
 import java.util.Objects;
 
 public class EnvConst {
@@ -12,12 +14,18 @@ public class EnvConst {
     public static Long JWT_EXPIRATION;
     public static Integer SERVER_PORT;
     static {
-        DATABASE_URL = (Dotenv.load().get("DATABASE_URL"));
-        DATABASE_USERNAME = (Dotenv.load().get("DATABASE_USERNAME"));
-        DATABASE_PASSWORD  = (Dotenv.load().get("DATABASE_PASSWORD"));
-        JWT_SECRET = (Dotenv.load().get("JWT_SECRET"));
-        JWT_EXPIRATION = Long.parseLong(Objects.requireNonNull(Dotenv.load().get("JWT_EXPIRATION")));
-        SERVER_PORT = Integer.parseInt(Objects.requireNonNull(Dotenv.load().get("SERVER_PORT")));
+        Map<String, String> env = System.getenv();
+        for (String envName : env.keySet()) {
+            System.out.format("%s=%s%n",
+                    envName,
+                    env.get(envName));
+        }
+        DATABASE_URL = (System.getenv("DATABASE_URL"));
+        DATABASE_USERNAME = (System.getenv("DATABASE_USERNAME"));
+        DATABASE_PASSWORD  = (System.getenv("DATABASE_PASSWORD"));
+        JWT_SECRET = (System.getenv("JWT_SECRET"));
+        JWT_EXPIRATION = Long.parseLong(Objects.requireNonNull(System.getenv("JWT_EXPIRATION")));
+        SERVER_PORT = Integer.parseInt(Objects.requireNonNull(System.getenv("SERVER_PORT")));
     }
     EnvConst() {
     }
