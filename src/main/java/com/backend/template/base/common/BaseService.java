@@ -35,11 +35,18 @@ public class BaseService<T> {
     }
 
     public PathBuilder entityPathBuilder;
-
+    public String baseModelClassName = ThuTienEntity.class.getName();
+    public Class modelClass;
     public T qModel;
 
-    public BaseService (T qModel) {
+    public BaseService (T qModel, String baseModelClassName) {
         this.qModel = qModel;
+        try {
+            modelClass = Class.forName(baseModelClassName);
+        } catch (Exception e) {
+            System.out.println("Not found " + baseModelClassName);
+        }
+
     }
 
     public T getQueryModel() {
@@ -78,7 +85,6 @@ public class BaseService<T> {
         }
         return  jpaQuery;
     }
-    public String baseModelClassName = ThuTienEntity.class.getName();
 
     public List<Field> getAllFields(Class<?> type) {
         List<Field> fields = new ArrayList<>();
@@ -93,8 +99,7 @@ public class BaseService<T> {
 
     public Class getTypeOfFieldObject(String key) {
         try {
-            Class sampleClass = Class.forName(baseModelClassName);
-            List<Field> allFields = this.getAllFields(sampleClass);
+            List<Field> allFields = this.getAllFields(modelClass);
             for (Field field : allFields) {
                 if (field.getName().equals(key)) {
                     return field.getType();

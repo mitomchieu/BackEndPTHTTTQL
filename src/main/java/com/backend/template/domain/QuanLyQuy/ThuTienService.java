@@ -41,8 +41,8 @@ public class ThuTienService extends BaseService<QThuTienEntity> {
     public ThuTienService(
             ThuTienRepository thuTienRepository,
             @Qualifier("userService") UserService userService) {
-        super(QThuTienEntity.thuTienEntity);
-        this.entityPathBuilder =  new PathBuilder<>(ThuTienEntity.class, "thuTienEntity");
+        super(QThuTienEntity.thuTienEntity, ThuTienEntity.class.getName());
+        entityPathBuilder = new PathBuilder<>(this.modelClass, "thuTienEntity");
         this.thuTienRepository = thuTienRepository;
         this.userService = userService;
     }
