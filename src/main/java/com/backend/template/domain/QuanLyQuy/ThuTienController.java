@@ -79,6 +79,4 @@ public class ThuTienController {
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
-
-
 }

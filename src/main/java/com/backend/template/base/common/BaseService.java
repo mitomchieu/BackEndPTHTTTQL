@@ -145,15 +145,12 @@ public class BaseService<T> {
             }
             return  path.stringValue().equalsIgnoreCase(value.toString());
         }
-        if ( type.equals(String.class)) {
-            StringPath path = entityPathBuilder.getString(key);
-            return path.stringValue().containsIgnoreCase(value.toString().trim());
-        }
         if (type.isInstance(Enum.class) || type.equals(Enum.class)) {
             EnumPath path = entityPathBuilder.getEnum(key, Enum.class);
             return path.stringValue().equalsIgnoreCase(value.toString());
         }
-        return null;
+        StringPath path = entityPathBuilder.getString(key);
+        return path.stringValue().containsIgnoreCase(value.toString().trim());
     }
 
     public BooleanExpression getMultiSearchPredicate(List<String> searchList) {

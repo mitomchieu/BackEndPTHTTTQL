@@ -1,6 +1,7 @@
 package com.backend.template.domain.QuanLyQuy.model;
 
 import com.backend.template.modules.core.user.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,7 @@ public class GiaoDichEntity {
     @JoinColumn(name = "userCreated")
     protected  User userCreated;
 
-    @OneToMany(mappedBy = "giaoDich")
+    @JsonIgnore
+    @OneToMany(mappedBy = "giaoDich", fetch = FetchType.LAZY)
     protected Set<HachToanEntity> danhSachHachToan;
 }

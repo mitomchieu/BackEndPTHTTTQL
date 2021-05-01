@@ -25,11 +25,6 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service("ThuTienService")
 public class ThuTienService extends BaseService<QThuTienEntity> {
@@ -37,6 +32,8 @@ public class ThuTienService extends BaseService<QThuTienEntity> {
 
     private ThuTienRepository thuTienRepository;
     private UserService userService;
+
+
     @Autowired
     public ThuTienService(
             ThuTienRepository thuTienRepository,

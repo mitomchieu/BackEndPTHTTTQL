@@ -5,6 +5,7 @@ import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.modules.core.user.model.QUser;
 import com.backend.template.modules.core.user.model.User;
 import com.backend.template.modules.core.user.repository.UserRepository;
+import com.querydsl.core.types.dsl.PathBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,8 @@ public class UserService extends BaseService<QUser> {
 
     @Autowired
     UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        super(QUser.user);
+        super(QUser.user, User.class.getName());
+        entityPathBuilder = new PathBuilder(this.modelClass, "user");
         this.userRepo = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
