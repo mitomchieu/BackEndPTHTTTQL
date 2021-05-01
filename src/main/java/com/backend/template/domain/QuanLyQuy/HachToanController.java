@@ -1,5 +1,6 @@
 package com.backend.template.domain.QuanLyQuy;
 
+import com.backend.template.base.common.annotations.api.ApiCommonResponse;
 import com.backend.template.base.common.response.ResponseTool;
 import com.backend.template.base.common.response.model.APIResponse;
 import com.backend.template.domain.QuanLyQuy.dto.CreateHachToanDTO;
@@ -11,15 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("giao-dich/hach-toan/")
+@ApiCommonResponse
 public class HachToanController {
 
     @Autowired

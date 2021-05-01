@@ -36,9 +36,9 @@ public class ThuTienController {
     }
 
     @PostMapping(path = "create", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Create tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @Operation(summary = "Create thu tien", description =  "role = ADMIN, USER", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
-    public ResponseEntity<APIResponse> createGiaoDich(
+    public ResponseEntity<APIResponse> createThuTien(
             @Valid @RequestBody CreateGiaoDichDTO createGiaoDichDTO
     ) {
         ThuTienEntity thuTienEntity = new ThuTienEntity();
@@ -54,24 +54,19 @@ public class ThuTienController {
     }
     
     @GetMapping(path = "get/{maGiaoDich}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Create tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @Operation(summary = "get Thu tien", description =  "role = ADMIN, USER", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
-    public  ResponseEntity<APIResponse> getGiaoDich(
+    public  ResponseEntity<APIResponse> getThuTien(
             @Param("maGiaoDich") String maGiaoDich
     ) {
         return  ResponseTool.GET_OK(this.thuTienService.getByMaGiaoDich(maGiaoDich));
     }
 
-    @GetMapping(path = "test", produces = MediaType.APPLICATION_JSON_VALUE)
-    public  ResponseEntity<APIResponse> getTest() {
-        return ResponseTool.GET_OK(this.thuTienService.testGet());
-    }
-
 
     @GetMapping(path = "get-all}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Create tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @Operation(summary = "get all thu tien", description =  "role = ADMIN, USER", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
-    public ResponseEntity<APIPagingResponse> getAll(
+    public ResponseEntity<APIPagingResponse> getAllThuTien(
             @ParameterObject Pageable pageable,
             @ParameterObject SearchParameter searchParameter
             ) throws BackendError {
