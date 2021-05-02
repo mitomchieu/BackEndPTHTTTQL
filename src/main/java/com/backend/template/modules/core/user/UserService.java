@@ -22,7 +22,7 @@ public class UserService extends BaseService<QUser> {
     @Autowired
     UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         super(QUser.user, User.class.getName());
-        entityPathBuilder = new PathBuilder(this.modelClass, "user");
+        entityPathBuilder = new PathBuilder<>(this.modelClass, "user");
         this.userRepo = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

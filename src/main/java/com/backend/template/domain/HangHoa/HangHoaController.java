@@ -54,7 +54,7 @@ public class HangHoaController {
         return  ResponseTool.GET_OK(this.hangHoaService.getByMaHangHoa(maHangHoa));
     }
 
-    @GetMapping(path = "get-all}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all hang hoa", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllHangHoa(
@@ -62,7 +62,7 @@ public class HangHoaController {
             @ParameterObject SearchParameter searchParameter
             ) throws BackendError {
         APIPagingResponse result = this.hangHoaService.getAll(pageable, searchParameter);
-        return ResponseTool.GET_OK(result.getData(), result.getStatus());
+        return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
     @DeleteMapping(path = "delte/{maHangHoa}")

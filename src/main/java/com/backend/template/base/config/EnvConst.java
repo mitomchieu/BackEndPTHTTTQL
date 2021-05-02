@@ -1,10 +1,6 @@
 package com.backend.template.base.config;
 
-
-import lombok.extern.log4j.Log4j;
-
 import java.util.Map;
-import java.util.Objects;
 
 public class EnvConst {
     public static String DATABASE_URL;
@@ -16,17 +12,25 @@ public class EnvConst {
     static {
         Map<String, String> env = System.getenv();
         for (String envName : env.keySet()) {
-            System.out.format("%s=%s%n",
-                    envName,
-                    env.get(envName));
+            System.out.format("%s=%s%n", envName, env.get(envName));
         }
-        DATABASE_URL = (System.getenv("DATABASE_URL"));
-        DATABASE_USERNAME = (System.getenv("DATABASE_USERNAME"));
-        DATABASE_PASSWORD  = (System.getenv("DATABASE_PASSWORD"));
-        JWT_SECRET = (System.getenv("JWT_SECRET"));
-        JWT_EXPIRATION = Long.parseLong(Objects.requireNonNull(System.getenv("JWT_EXPIRATION")));
-        SERVER_PORT = Integer.parseInt(Objects.requireNonNull(System.getenv("SERVER_PORT")));
+
+        // DATABASE_URL = (System.getenv("DATABASE_URL"));
+        // DATABASE_USERNAME = (System.getenv("DATABASE_USERNAME"));
+        // DATABASE_PASSWORD = (System.getenv("DATABASE_PASSWORD"));
+        // JWT_SECRET = (System.getenv("JWT_SECRET"));
+        // JWT_EXPIRATION =
+        // Long.parseLong(Objects.requireNonNull(System.getenv("JWT_EXPIRATION")));
+        // SERVER_PORT =
+        // Integer.parseInt(Objects.requireNonNull(System.getenv("SERVER_PORT")));
+        DATABASE_URL = "jdbc:mysql://mysql-29798-0.cloudclusters.net:29824/sample";
+        DATABASE_USERNAME = "admin";
+        DATABASE_PASSWORD = "D9SpmrQC";
+        JWT_SECRET = "secret";
+        JWT_EXPIRATION = 604800000L;
+        SERVER_PORT = 3323;
     }
+
     EnvConst() {
     }
 }

@@ -2,7 +2,6 @@ package com.backend.template.base.common.response.model;
 
 import java.util.List;
 
-import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

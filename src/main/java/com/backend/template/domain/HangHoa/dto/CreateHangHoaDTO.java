@@ -1,12 +1,10 @@
 package com.backend.template.domain.HangHoa.dto;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor

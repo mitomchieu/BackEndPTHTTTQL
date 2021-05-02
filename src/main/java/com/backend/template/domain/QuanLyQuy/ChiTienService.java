@@ -1,25 +1,25 @@
 package com.backend.template.domain.QuanLyQuy;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import com.backend.template.base.common.BaseService;
 import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.domain.QuanLyQuy.model.ChiTienEntity;
-import com.backend.template.domain.QuanLyQuy.model.GiaoDichEntity;
 import com.backend.template.domain.QuanLyQuy.model.QChiTienEntity;
-import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import com.backend.template.modules.core.auth.AuthController;
 import com.backend.template.modules.core.user.UserService;
 import com.backend.template.modules.core.user.model.User;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
+
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class ChiTienService extends BaseService<QChiTienEntity> {
@@ -29,7 +29,7 @@ public class ChiTienService extends BaseService<QChiTienEntity> {
 
     public ChiTienService() {
         super(QChiTienEntity.chiTienEntity, ChiTienEntity.class.getName());
-        entityPathBuilder = new PathBuilder<ChiTienEntity>(this.modelClass, "chiTienEntity");
+        entityPathBuilder = new PathBuilder<>(this.modelClass, "chiTienEntity");
     }
 
     @Transactional

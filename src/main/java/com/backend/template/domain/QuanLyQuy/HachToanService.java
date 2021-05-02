@@ -1,23 +1,22 @@
 package com.backend.template.domain.QuanLyQuy;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import com.backend.template.base.common.BaseService;
-import com.backend.template.domain.QuanLyQuy.model.GiaoDichEntity;
 import com.backend.template.domain.QuanLyQuy.model.HachToanEntity;
-import com.backend.template.domain.QuanLyQuy.model.QGiaoDichEntity;
 import com.backend.template.domain.QuanLyQuy.model.QHachToanEntity;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.transaction.Transactional;
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class HachToanService extends BaseService<QHachToanEntity> {
     public HachToanService() {
         super(QHachToanEntity.hachToanEntity, QHachToanEntity.class.getName());
-        entityPathBuilder = new PathBuilder(this.modelClass, "hachToanEntity");
+        entityPathBuilder = new PathBuilder<>(this.modelClass, "hachToanEntity");
     }
 
     public HachToanEntity getByMaHachToan(Integer maHachToan) {
