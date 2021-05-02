@@ -1,6 +1,9 @@
 package com.backend.template.base.common;
 
+import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.exception.BackendError;
+import com.backend.template.base.common.response.model.APIPagingResponse;
+import com.backend.template.domain.HangHoa.model.HangHoaEntity;
 import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import com.ibm.icu.impl.locale.AsciiUtil;
 import com.querydsl.core.types.Order;
@@ -17,10 +20,7 @@ import javax.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
