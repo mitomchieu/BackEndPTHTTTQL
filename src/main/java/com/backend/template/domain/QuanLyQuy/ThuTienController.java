@@ -78,5 +78,4 @@ public class ThuTienController {
         APIPagingResponse result = this.thuTienService.getAll(pageable, searchParameter);
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
-
 }

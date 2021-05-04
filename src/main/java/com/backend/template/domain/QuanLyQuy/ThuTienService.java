@@ -49,21 +49,4 @@ public class ThuTienService extends BaseService<QThuTienEntity> {
     public ThuTienEntity getByMaGiaoDich(String maGiaoDich) {
         return  getJPAQueryFactory().selectFrom(qModel).where(qModel.maGiaoDich.eq(maGiaoDich)).fetchOne();
     }
-
-
-    public APIPagingResponse getAll(
-            Pageable pageable,
-            SearchParameter searchParameter
-    ) throws BackendError {
-        JPAQuery<?>  jpaQuery = getJPAQueryFactory().selectFrom(qModel)
-                .fetchAll()
-                .where(getMultiSearchPredicate(searchParameter.getSearch()));
-        JPAQuery<?> jpaQueryCount = jpaQuery.clone();
-
-        final int total = (int) jpaQueryCount.fetchCount();
-
-        BaseService.queryPagable(jpaQuery, pageable, qModel);
-        List<ThuTienEntity> result = jpaQuery.select(qModel).fetch();
-        return  new APIPagingResponse(Collections.singletonList(result), total);
-    }
 }

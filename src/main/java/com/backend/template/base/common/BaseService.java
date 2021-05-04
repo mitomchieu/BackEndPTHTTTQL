@@ -2,30 +2,22 @@ package com.backend.template.base.common;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.exception.BackendError;
+import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DatePath;
-import com.querydsl.core.types.dsl.EnumPath;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.SimplePath;
-import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.core.types.dsl.TimeExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -33,7 +25,7 @@ import org.springdoc.core.converters.models.Pageable;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings( { "rawtypes", "unchecked" }) // Disable noise :((
-public class BaseService<T> {
+public class BaseService<T extends EntityPathBase> {
 
     @PersistenceContext
     public EntityManager em;
@@ -188,5 +180,21 @@ public class BaseService<T> {
             }
         }
         return  result;
+    }
+
+    public APIPagingResponse getAll(
+            Pageable pageable,
+            SearchParameter searchParameter
+    ) throws BackendError {
+        JPAQuery<?> jpaQuery = (JPAQuery<?>) getJPAQueryFactory().selectFrom(this.qModel)
+                .fetchAll()
+                .where(getMultiSearchPredicate(searchParameter.getSearch()));
+        JPAQuery<?> jpaQueryCount = jpaQuery.clone();
+
+        final int total = (int) jpaQueryCount.fetchCount();
+
+        BaseService.queryPagable(jpaQuery, pageable, qModel);
+        List<?> result = jpaQuery.select(qModel).fetch();
+        return  new APIPagingResponse(Collections.singletonList(result), total);
     }
 }
