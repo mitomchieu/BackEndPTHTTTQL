@@ -51,7 +51,7 @@ public class KhoHangController {
         return  ResponseTool.GET_OK(this.khoHangService.getByMaKhoHang(maKhoHang));
     }
 
-    @GetMapping(path = "get-all}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all chi tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllKhoHang(
