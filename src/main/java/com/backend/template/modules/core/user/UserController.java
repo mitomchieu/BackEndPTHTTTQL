@@ -48,7 +48,7 @@ public class UserController {
 
     @GetMapping(path = "my/profile", produces =  MediaType.APPLICATION_JSON_VALUE)
     @Authorization
-    @Operation(description = "Get My profile, role = ADMIN, USER", summary =  "Get My")
+    @Operation(description = "Get My profile, role = ADMIN, USER", summary =  "Get My", security =  @SecurityRequirement(name = "bearer-jwt" ))
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIResponse> getMyProfile(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
