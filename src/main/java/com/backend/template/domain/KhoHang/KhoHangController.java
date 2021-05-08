@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.directory.SearchControls;
 import javax.validation.Valid;
 
 @RestController
@@ -46,13 +47,13 @@ public class KhoHangController {
     @Operation(summary = "get Kho hang by id", description =  "role= ADMIN, USEr", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIResponse> getKhoHangById(
-            @Param("maKhoHang") String maKhoHang
+            @PathVariable String maKhoHang
     ) {
         return  ResponseTool.GET_OK(this.khoHangService.getByMaKhoHang(maKhoHang));
     }
 
     @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get all chi tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @Operation(summary = "Get all kho hang", description =  "role = ADMIN, USer", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllKhoHang(
             @ParameterObject Pageable pageable,
@@ -62,13 +63,16 @@ public class KhoHangController {
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
-
-    public ResponseEntity<APIResponse> getAllHangHoaTrongKho() {
-        return null;
-    }
-
-    public ResponseEntity<APIResponse> nhapKho() {
-        return null;
+    @GetMapping(path = "get-all-hang-hoa/{maKhoHang}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get all hang hoa trong kho", description =  "role = ADMIN, USER. Cai nay chi cho search theo so luong hang", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
+    public ResponseEntity<APIResponse> getAllHangHoaTrongKho(
+            @ParameterObject SearchParameter searchParameter,
+            @RequestParam(value = "maHangHoa", required = false) String maHangHoa,
+            @PathVariable("maKhoHang") String maKhoHang
+            ) {
+        Object result = this.khoHangService.getAllHangHoaTrongKho(maKhoHang, maHangHoa, searchParameter);
+        return ResponseTool.GET_OK(result);
     }
 
 }

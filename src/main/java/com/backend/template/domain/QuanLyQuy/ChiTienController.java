@@ -18,11 +18,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -56,12 +52,12 @@ public class ChiTienController {
     @Operation(summary = "Create chi tien by id", description =  "role= ADMIN, USEr", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public  ResponseEntity<APIResponse> getChiTien(
-            @Param("maGiaoDich") String maGiaoDich
+            @PathVariable String maGiaoDich
     ) {
         return  ResponseTool.GET_OK(this.chiTienService.getByMaGiaoDich(maGiaoDich));
     }
 
-    @GetMapping(path = "get-all}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all chi tien", description =  "Get profile by id, role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllChiTien(

@@ -67,7 +67,7 @@ public class HangHoaController {
 
     @DeleteMapping(path = "delte/{maHangHoa}")
     public ResponseEntity<APIResponse> deleteByMaHangHoa(
-            @Param("maHangHoa") String maHangHoa
+            @PathVariable("maHangHoa") String maHangHoa
     ) {
         return ResponseTool.DELETE_OK(this.hangHoaService.deleteByMaHangHoa(maHangHoa));
     }

@@ -48,7 +48,7 @@ public class HachToanController {
     @GetMapping(path = "get/{maHachToan}", produces =  MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get hach toan by id", description = "Get hach toan by id")
     public  ResponseEntity<APIResponse> getHachToanById(
-            @Param("maHachToan") Integer maHachToan
+            @PathVariable Integer maHachToan
     ) {
         return ResponseTool.GET_OK( this.hachToanService.getByMaHachToan(maHachToan));
     }
@@ -56,7 +56,7 @@ public class HachToanController {
     @GetMapping(path = "get-by-ma-giao-dich/{maGiaoDich}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get by ma giao dich", description = "Get by ma giao dich")
     public  ResponseEntity<APIResponse> getByMaGiaoDich(
-            @Param("maGiaoDich") String maGiaoDich
+            @PathVariable String maGiaoDich
     ) {
         List<HachToanEntity> result = this.hachToanService.getHachToanByMaGiaoDich(maGiaoDich);
         return ResponseTool.GET_OK(result);
