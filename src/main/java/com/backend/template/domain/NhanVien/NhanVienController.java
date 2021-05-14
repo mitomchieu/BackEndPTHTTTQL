@@ -75,7 +75,7 @@ public class NhanVienController {
         return ResponseTool.GET_OK(this.nhanVienService.getByMaNhanVien(maNhanVien));
     }
 
-    @GetMapping(path = "get-all-by", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "get-all-by-ma-chi-nhanh", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all nhan vien by ma chi nhanh", description =  "role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse>  getAllNhanVienByMaChiNhanh(
