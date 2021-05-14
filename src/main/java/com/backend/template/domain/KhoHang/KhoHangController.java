@@ -13,13 +13,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.directory.SearchControls;
 import javax.validation.Valid;
 
 @RestController
@@ -53,12 +51,12 @@ public class KhoHangController {
     }
 
     @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get all kho hang", description =  "role = ADMIN, USer", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @Operation(summary = "Get all kho hang", description = "role = ADMIN, USer", security = @SecurityRequirement(name = "bearer-jwt"))
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllKhoHang(
             @ParameterObject Pageable pageable,
             @ParameterObject SearchParameter searchParameter
-            ) throws BackendError {
+    ) throws BackendError {
         APIPagingResponse result = this.khoHangService.getAll(pageable, searchParameter);
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }

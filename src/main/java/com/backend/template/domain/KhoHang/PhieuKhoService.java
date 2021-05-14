@@ -17,7 +17,7 @@ import java.util.Objects;
 @Service
 public class PhieuKhoService extends BaseService<QPhieuKhoEntity> {
     public PhieuKhoService() {
-        super(QPhieuKhoEntity.phieuKhoEntity, "phieuKhoEntity");
+        super(QPhieuKhoEntity.phieuKhoEntity, PhieuKhoEntity.class.getName());
         entityPathBuilder = new PathBuilder<>(this.modelClass, "phieuKhoEntity");
     }
 

@@ -16,16 +16,19 @@ import com.backend.template.base.common.ConstSetting.ERoles;
 import com.backend.template.modules.core.auth.CustomUserDetails;
 import com.backend.template.modules.core.user.model.User;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 public class GuestAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("debug filter guest");
         if (!Objects.isNull(SecurityContextHolder.getContext().getAuthentication()) &&
                 SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
