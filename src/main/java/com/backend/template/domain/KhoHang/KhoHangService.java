@@ -53,7 +53,6 @@ public class KhoHangService extends BaseService<QKhoHangEntity> {
             String maHangHoa,
             SearchParameter searchParameter
     ) {
-        QHangHoaEntity qHangHoaEntity = QHangHoaEntity.hangHoaEntity;
         QHangTrongKhoEntity qHangTrongKhoEntity = QHangTrongKhoEntity.hangTrongKhoEntity;
         JPAQueryFactory jpaQueryFactory = this.getJPAQueryFactory();
         JPAQuery query = jpaQueryFactory.from(qHangTrongKhoEntity)

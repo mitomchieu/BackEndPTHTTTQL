@@ -5,6 +5,7 @@ import com.backend.template.base.common.exception.handler.CustomRestExceptionHan
 import com.backend.template.modules.core.auth.filter.GuestAuthenticationFilter;
 import com.backend.template.modules.core.auth.filter.JwtAuthenticationFilter;
 
+import com.backend.template.modules.core.auth.token.provider.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.RegistrationBean;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -42,8 +44,11 @@ public class SecurityConfig {
         @Autowired
         private CustomUserDetailsService customUserDetailsService;
 
+        @Autowired
+        private JwtProvider tokenProvider;
+
         public JwtAuthenticationFilter jwtAuthenticationFilter() {
-            return new JwtAuthenticationFilter();
+            return new JwtAuthenticationFilter(tokenProvider, customUserDetailsService);
         }
 
         public GuestAuthenticationFilter guestAuthenticationFilter() {
@@ -107,13 +112,5 @@ public class SecurityConfig {
                     .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(guestAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         }
-
-//        @Bean
-//        public RegistrationBean jwtAuthFilterRegister(
-//                JwtAuthenticationFilter jwtAuthenticationFilter) {
-//            FilterRegistrationBean jwtFilterRegistrationBean = new FilterRegistrationBean(jwtAuthenticationFilter);
-//            jwtFilterRegistrationBean.setEnabled(false);
-//            return jwtFilterRegistrationBean;
-//        }
     }
 }

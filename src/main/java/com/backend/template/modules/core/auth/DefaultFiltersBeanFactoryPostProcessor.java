@@ -1,5 +1,7 @@
 package com.backend.template.modules.core.auth;
 
+import com.backend.template.modules.core.auth.filter.GuestAuthenticationFilter;
+import com.backend.template.modules.core.auth.filter.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -11,12 +13,16 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 
 @Component
 @Slf4j
 public class DefaultFiltersBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
+    public static  String[] IGNORE_FILTERS =  {
+                JwtAuthenticationFilter.class.getName(),
+                GuestAuthenticationFilter.class.getName()};
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory bf)
             throws BeansException {
