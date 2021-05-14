@@ -15,17 +15,23 @@ public class BangChamCongService extends BaseService<QBangChamCongEntity> {
         entityPathBuilder = new PathBuilder<Object>(this.modelClass, "bangChamCongEntity");
     }
 
-    @Transactional
-    public BangChamCongEntity createBangChamCong(BangChamCongEntity bangChamCongEntity) {
-        em.joinTransaction();
-        em.persist(bangChamCongEntity);
+    public BangChamCongEntity getBangChamCongById(
+            Long maBangChamCong
+    ) {
         return this.getJPAQueryFactory()
                 .selectFrom(qModel)
                 .where(qModel
                         .maBangChamCong
-                        .eq(bangChamCongEntity
-                                .getMaBangChamCong()))
+                        .eq(maBangChamCong))
                 .fetchOne();
+    }
+
+
+    @Transactional
+    public BangChamCongEntity createBangChamCong(BangChamCongEntity bangChamCongEntity) {
+        em.joinTransaction();
+        em.persist(bangChamCongEntity);
+        return this.getBangChamCongById(bangChamCongEntity.getMaBangChamCong());
     }
 
 }

@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -49,8 +46,14 @@ public class BangChamCongController {
         return ResponseTool.POST_OK( bangChamCongEntity);
     }
 
-    public ResponseEntity<APIResponse> getBangChamCongById() {
-        return null;
+
+    @GetMapping(path = "get/{maBangChamCong}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "get bang cham cong by id", description =  "role= ADMIN, USEr", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
+    public ResponseEntity<APIResponse> getBangChamCongById(
+            @PathVariable("maBangChamCong") Long maBangChamCong
+    ) {
+        return ResponseTool.GET_OK(this.bangChamCongService.getBangChamCongById(maBangChamCong));
     }
 
     public ResponseEntity<APIPagingResponse> getAllBangChamCong() {
