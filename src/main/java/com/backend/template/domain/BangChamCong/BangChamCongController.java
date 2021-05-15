@@ -7,6 +7,7 @@ import com.backend.template.base.common.response.ResponseTool;
 import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.base.common.response.model.APIResponse;
 import com.backend.template.domain.BangChamCong.dto.CreateBangChamCongEntityDto;
+import com.backend.template.domain.BangChamCong.dto.UpdataBangChamCongDTO;
 import com.backend.template.domain.BangChamCong.model.BangChamCongEntity;
 import com.backend.template.domain.ChiNhanh.ChiNhanhService;
 import com.backend.template.domain.ChiNhanh.entity.ChiNhanhEntity;
@@ -44,7 +45,7 @@ public class BangChamCongController {
         bangChamCongEntity.setGhiChu(createBangChamCongEntityDto.getGhiChu());
         bangChamCongEntity.setNgayTao(createBangChamCongEntityDto.getNgayTao());
         ChiNhanhEntity chiNhanhEntity = this.chiNhanhService.getChiNhanhByMaChiNhanhh(
-                    createBangChamCongEntityDto.getChiNhanh());
+                    createBangChamCongEntityDto.getChiNhanhEntity());
         bangChamCongEntity.setChiNhanhEntity(chiNhanhEntity);
         bangChamCongEntity = this.bangChamCongService.createBangChamCong(bangChamCongEntity);
         return ResponseTool.POST_OK( bangChamCongEntity);
@@ -76,12 +77,24 @@ public class BangChamCongController {
         return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
-    public ResponseEntity<APIResponse> khoaBangChamCong() {
-        return null;
-    }
-
-    public ResponseEntity<APIResponse> moKhoaBangChamCong() {
-        return null;
+    @PutMapping(path = "update/{maBangChamCong}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Khoa bang cham cong",
+            description = "role = ADMIN, USer",
+            security = @SecurityRequirement(name = "bearer-jwt"))
+    public ResponseEntity<APIResponse> khoaBangChamCong(
+            @PathVariable("maBangChamCong") Long maBangChamCong,
+            @Valid @RequestBody UpdataBangChamCongDTO updateBangChamCongDTO
+    ) {
+        BangChamCongEntity bangChamCongEntity = new BangChamCongEntity();
+        bangChamCongEntity.setGhiChu(updateBangChamCongDTO.getGhiChu());
+        bangChamCongEntity.setNgayTao(updateBangChamCongDTO.getNgayTao());
+        ChiNhanhEntity chiNhanhEntity = this.chiNhanhService.getChiNhanhByMaChiNhanhh(
+                updateBangChamCongDTO.getChiNhanhEntity());
+        bangChamCongEntity.setChiNhanhEntity(chiNhanhEntity);
+        bangChamCongEntity.setKhoaBang(updateBangChamCongDTO.getKhoaBang());
+        bangChamCongEntity.setMaBangChamCong(maBangChamCong);
+        BangChamCongEntity result = this.bangChamCongService.updateBangChamCong(bangChamCongEntity);
+        return  ResponseTool.PUT_OK(result);
     }
 
     public ResponseEntity<APIResponse> themNhanVienVaoBangChamCon() {

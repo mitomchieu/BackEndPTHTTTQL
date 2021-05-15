@@ -48,6 +48,7 @@ public class ThuTienController {
         thuTienEntity.setMaGiaoDich(createGiaoDichDTO.getMaGiaoDich());
         thuTienEntity.setThoiGianGiaoDich(createGiaoDichDTO.getThoiGianGiaoDich());
         thuTienEntity.setThoiGianHachToan(createGiaoDichDTO.getThoiGianHachToan());
+        thuTienEntity.setIsTienMat(thuTienEntity.getIsTienMat());
         thuTienEntity.setLyDo(createGiaoDichDTO.getLyDo());
         ThuTienEntity result = this.thuTienService.createThuTienEntity(thuTienEntity);
         System.out.println(result);

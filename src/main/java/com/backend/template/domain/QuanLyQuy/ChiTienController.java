@@ -43,6 +43,7 @@ public class ChiTienController {
         chiTienEntity.setMaGiaoDich(createGiaoDichDTO.getMaGiaoDich());
         chiTienEntity.setThoiGianGiaoDich(createGiaoDichDTO.getThoiGianGiaoDich());
         chiTienEntity.setThoiGianHachToan(createGiaoDichDTO.getThoiGianHachToan());
+        chiTienEntity.setIsTienMat(chiTienEntity.getIsTienMat());
         chiTienEntity.setLyDo(createGiaoDichDTO.getLyDo());
         ChiTienEntity result = this.chiTienService.createChiTienEntity(chiTienEntity);
         return ResponseTool.POST_OK(result);

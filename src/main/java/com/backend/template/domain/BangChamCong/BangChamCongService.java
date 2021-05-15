@@ -2,7 +2,6 @@ package com.backend.template.domain.BangChamCong;
 
 import com.backend.template.base.common.BaseService;
 import com.backend.template.base.common.ParameterObject.SearchParameter;
-import com.backend.template.base.common.annotations.api.ApiCommonResponse;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.domain.BangChamCong.model.BangChamCongEntity;
@@ -32,6 +31,15 @@ public class BangChamCongService extends BaseService<QBangChamCongEntity> {
                         .maBangChamCong
                         .eq(maBangChamCong))
                 .fetchOne();
+    }
+
+    @Transactional
+    public BangChamCongEntity updateBangChamCong(
+        BangChamCongEntity bangChamCongEntity
+    ) {
+        em.joinTransaction();
+        em.merge(bangChamCongEntity);
+        return this.getBangChamCongById(bangChamCongEntity.getMaBangChamCong());
     }
 
 

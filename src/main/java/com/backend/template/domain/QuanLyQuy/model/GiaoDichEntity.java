@@ -44,6 +44,7 @@ public class GiaoDichEntity {
     @Column(unique = true)
     protected String maGiaoDich;
 
+
     @Column
     protected String doiTuongGiaoDich;
 
@@ -63,6 +64,9 @@ public class GiaoDichEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "loaiGiaoDich")
     protected  ELoaiGiaoDich loaiGiaoDich;
+
+    @Column(columnDefinition =  "tinyint(1) default 1")
+    private Boolean isTienMat = true;
 
     @ManyToOne()
     @JoinColumn(name = "userCreated")
