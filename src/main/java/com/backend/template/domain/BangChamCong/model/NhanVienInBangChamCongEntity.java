@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 public class NhanVienInBangChamCongEntity {
 
     @Column
-    private Integer heSo;
+    private Double heSo;
 
     @EmbeddedId
     private NhanVienInBangChamCongID nhanVienInBangChamCongId;
