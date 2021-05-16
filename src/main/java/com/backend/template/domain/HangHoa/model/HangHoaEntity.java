@@ -28,4 +28,8 @@ public class HangHoaEntity {
 
     @Column
     private String moTa;
+
+    @Column
+    private Long donGia;
+
 }
