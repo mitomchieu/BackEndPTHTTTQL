@@ -22,4 +22,6 @@ public class CreateHangHoaDTO {
     private String nguonGoc;
 
     private String moTa;
+
+    private Long donGia;
 }
