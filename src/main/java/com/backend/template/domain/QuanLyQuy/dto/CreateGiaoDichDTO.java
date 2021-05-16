@@ -25,4 +25,6 @@ public class CreateGiaoDichDTO {
 
     protected  Long tongTien;
 
+    protected Boolean isTienMat = true;
+
 }

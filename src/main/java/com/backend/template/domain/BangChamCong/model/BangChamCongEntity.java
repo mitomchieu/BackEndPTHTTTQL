@@ -22,6 +22,9 @@ public class BangChamCongEntity {
     @ManyToOne
     private ChiNhanhEntity chiNhanhEntity;
 
+    @Column(columnDefinition = "tinyint(1) default 0")
+    private Boolean khoaBang = false;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maBangChamCong;

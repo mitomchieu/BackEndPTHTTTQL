@@ -14,7 +14,9 @@ public class ResponseTool {
     }
 
     public static ResponseEntity<APIResponse> DELETE_OK(Object data) {
-        return new ResponseEntity<APIResponse>(new APIResponse(200, "Deleted", data), HttpStatus.OK);
+        return new ResponseEntity<APIResponse>(new APIResponse(200, "Deleted", new Object() {
+            public final Object count =  data;
+        }), HttpStatus.OK);
     }
 
     public static ResponseEntity<APIResponse> GET_OK(Object data) {

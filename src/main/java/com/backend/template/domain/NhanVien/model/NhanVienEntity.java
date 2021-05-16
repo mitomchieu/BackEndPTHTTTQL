@@ -8,10 +8,7 @@ import com.backend.template.domain.ChiNhanh.entity.ChiNhanhEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-/**
- *
- * @author chudu
- */
+
 @Entity
 @Data
 @AllArgsConstructor
