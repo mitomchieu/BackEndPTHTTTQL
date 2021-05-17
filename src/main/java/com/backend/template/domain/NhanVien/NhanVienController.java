@@ -58,6 +58,7 @@ public class NhanVienController {
         NhanVienEntity nhanVienEntity = new NhanVienEntity();
         nhanVienEntity.setMaNhanVien(createNhanVienDTO.getMaNhanVien());
         nhanVienEntity.setTenNhanVien(createNhanVienDTO.getTenNhanVien());
+        nhanVienEntity.setSoTaiKhoanNganHang(createNhanVienDTO.getSoTaiKhoanNganHang());
         nhanVienEntity.setNgaySinh(createNhanVienDTO.getNgaySinh());
         ChiNhanhEntity chiNhanhEntity  = this.chiNhanhService
                     .getChiNhanhByMaChiNhanhh(createNhanVienDTO.getMaChiNhanh());

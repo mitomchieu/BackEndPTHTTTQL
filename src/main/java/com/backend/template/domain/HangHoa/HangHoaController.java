@@ -41,6 +41,7 @@ public class HangHoaController {
         hangHoaEntity.setThoiHanBaoHanh(createHangHoaDTO.getThoiHanBaoHanh());
         hangHoaEntity.setNguonGoc(createHangHoaDTO.getNguonGoc());
         hangHoaEntity.setMoTa(createHangHoaDTO.getMoTa());
+        hangHoaEntity.setDonGia(createHangHoaDTO.getDonGia());
         hangHoaEntity = this.hangHoaService.createHangHoa(hangHoaEntity);
         return ResponseTool.POST_OK(hangHoaEntity);
     }

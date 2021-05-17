@@ -10,11 +10,6 @@ import java.util.Date;
 @Data
 public class ChiTienEntity extends GiaoDichEntity {
 
-
-    ChiTienEntity(String maGiaoDich, String doiTuongGiaoDich, Date thoiGianGiaoDich, Date thoiGianHachToan, String lyDoNop, User user, Long tongTien) {
-        super(maGiaoDich, doiTuongGiaoDich, thoiGianGiaoDich, thoiGianHachToan, lyDoNop, tongTien, ELoaiGiaoDich.CHITIEN, user ,null);
-    }
-
     public ChiTienEntity() {
 
     }
