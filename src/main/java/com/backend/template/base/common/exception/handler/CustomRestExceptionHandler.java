@@ -4,6 +4,7 @@ import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.exception.dto.ApiErrorDTO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +56,17 @@ public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
         return ResponseEntity.status(ex.getStatusCode()).body(apiErrorDTO);
     }
 
+    public ResponseEntity<ApiErrorDTO> handleDataIntegrityViolationExceptionExceptions(
+            DataIntegrityViolationException ex
+    ) {
+        log.error(ex.getMessage());
+        ex.printStackTrace();
+        ApiErrorDTO apiErrorDTO = new ApiErrorDTO();
+        apiErrorDTO.setMessage(ex.getMessage());
+        apiErrorDTO.setStatus(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiErrorDTO);
+    }
+
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiErrorDTO> handleAll(Exception ex) {
         System.out.println(ex.getClass());
@@ -66,6 +79,9 @@ public class CustomRestExceptionHandler  implements AuthenticationEntryPoint {
         }
         if (ex instanceof  MethodArgumentNotValidException) {
             return handleValidationExceptions((MethodArgumentNotValidException) ex);
+        }
+        if (ex instanceof DataIntegrityViolationException) {
+            return handleDataIntegrityViolationExceptionExceptions((DataIntegrityViolationException) ex);
         }
         log.error(ex.getMessage());
         ex.printStackTrace();
