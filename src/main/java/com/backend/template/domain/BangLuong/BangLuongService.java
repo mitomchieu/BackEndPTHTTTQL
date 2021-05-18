@@ -19,11 +19,35 @@ public class BangLuongService extends BaseService<QBangLuongEntity>  {
         entityPathBuilder = new PathBuilder<Object>(this.modelClass, "bangLuongEntity");
     }
 
-
     @Transactional
     public BangLuongEntity createBangLuong(BangLuongEntity bangLuongEntity) {
         em.joinTransaction();
         em.persist(bangLuongEntity);
         return bangLuongEntity;
+    }
+
+    @Transactional
+    public BangLuongEntity updateBangLuong(BangLuongEntity bangLuongEntity) {
+        em.joinTransaction();
+        em.merge(bangLuongEntity);
+        return bangLuongEntity;
+    }
+
+    public  BangLuongEntity getByMaNhanVien(
+            String maNhanVien
+    ) {
+        return  this.getJPAQueryFactory()
+                .selectFrom(this.qModel)
+                .where(this.qModel
+                .nhanVienEntity
+                .maNhanVien.eq(maNhanVien))
+                .fetchOne();
+    }
+
+    public BangLuongEntity getByMaBangLuong(Long maBangLuong) {
+        return this.getJPAQueryFactory()
+                .selectFrom(this.qModel)
+                .where(this.qModel.maBangLuong.eq(maBangLuong))
+                .fetchOne();
     }
 }
