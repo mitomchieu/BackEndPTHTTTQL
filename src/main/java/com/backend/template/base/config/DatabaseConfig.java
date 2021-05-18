@@ -15,9 +15,13 @@ public class DatabaseConfig {
     public DataSource getDataSource() {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
-        dataSourceBuilder.url(EnvConst.DATABASE_URL);
-        dataSourceBuilder.username(EnvConst.DATABASE_USERNAME);
-        dataSourceBuilder.password(EnvConst.DATABASE_PASSWORD);
+//        dataSourceBuilder.url(EnvConst.DATABASE_URL);
+//        dataSourceBuilder.username(EnvConst.DATABASE_USERNAME);
+//        dataSourceBuilder.password(EnvConst.DATABASE_PASSWORD);
+
+        dataSourceBuilder.url("jdbc:mysql://ec2-13-212-58-46.ap-southeast-1.compute.amazonaws.com:3306/sample");
+        dataSourceBuilder.username("root");
+        dataSourceBuilder.password("12!@qwER");
         return dataSourceBuilder.build();
     }
 
