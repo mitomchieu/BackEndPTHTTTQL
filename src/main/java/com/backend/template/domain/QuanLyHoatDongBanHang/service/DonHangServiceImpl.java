@@ -12,7 +12,7 @@ public class DonHangServiceImpl implements DonHangService {
     private DonHangRepository repo;
 
     @Override
-    public Iterable<DonHangEntity> findAll() {
+    public List<DonHangEntity> findAll() {
         return repo.findAll();
     }
 
@@ -27,12 +27,14 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
-    public void save(DonHangEntity donHang) {
+    public DonHangEntity save(DonHangEntity donHang) {
         repo.save(donHang);
+        return donHang;
     }
 
     @Override
-    public void delete(DonHangEntity donHang) {
+    public DonHangEntity delete(DonHangEntity donHang) {
         repo.delete(donHang);
+        return donHang;
     }
 }

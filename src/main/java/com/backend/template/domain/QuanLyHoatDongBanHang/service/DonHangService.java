@@ -5,13 +5,13 @@ import com.backend.template.domain.QuanLyHoatDongBanHang.model.DonHangEntity;
 import java.util.List;
 
 public interface DonHangService {
-    Iterable<DonHangEntity> findAll();
+    List<DonHangEntity> findAll();
 
     List<DonHangEntity> searchByNhanVien(String nv);
 
     DonHangEntity searchByMaDonHang(Long id);
 
-    void save(DonHangEntity donHang);
+    DonHangEntity save(DonHangEntity donHang);
 
-    void delete(DonHangEntity donHang);
+    DonHangEntity delete(DonHangEntity donHang);
 }
