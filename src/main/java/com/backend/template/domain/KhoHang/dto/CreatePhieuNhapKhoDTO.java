@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePhieuNhapKhoDTO {
-
     private String doiTuong;
 
     private  String diaChi;

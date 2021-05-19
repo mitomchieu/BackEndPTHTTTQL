@@ -23,9 +23,9 @@ public class EnvConst {
         // Long.parseLong(Objects.requireNonNull(System.getenv("JWT_EXPIRATION")));
         // SERVER_PORT =
         // Integer.parseInt(Objects.requireNonNull(System.getenv("SERVER_PORT")));
-        DATABASE_URL = "jdbc:mysql://mysql-29798-0.cloudclusters.net:29824/sample";
-        DATABASE_USERNAME = "admin";
-        DATABASE_PASSWORD = "D9SpmrQC";
+        DATABASE_URL = "jdbc:mysql://ec2-13-212-58-46.ap-southeast-1.compute.amazonaws.com:3306/sample";
+        DATABASE_USERNAME = "root";
+        DATABASE_PASSWORD = "12!@qwER";
         JWT_SECRET = "secret";
         JWT_EXPIRATION = 604800000L;
         SERVER_PORT = 3323;
