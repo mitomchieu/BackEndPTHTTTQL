@@ -75,6 +75,7 @@ public class BangLuongController {
         return ResponseTool.PUT_OK(result);
     }
 
+
     @GetMapping(path = "get-by-ma-bang-luong/{maBangLuong}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "get bang luong by id", description =  "role= ADMIN, USEr",
             security = @SecurityRequirement(name = "bearer-jwt" ) )

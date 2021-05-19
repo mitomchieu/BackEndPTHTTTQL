@@ -86,7 +86,22 @@ public class ThanhToanLuongController {
         return ResponseTool.PUT_OK("Done");
     }
 
-    public  ResponseEntity<ApiCommonResponse> traLuongChoNhanVien() {
+
+    @GetMapping("test")
+    public ResponseEntity<APIResponse> testApi() {
+//        return ResponseTool.GET_OK(
+//            this.thanhToanLuongService.tinhLuong()
+//        );
+        this.thanhToanLuongService.tinhLuong(4L);
+        return null;
+    }
+
+    @PutMapping(path = "tra-luong/{maThanhToanLuong}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "them bang cham cong", description =  "role= ADMIN, USEr", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
+    public  ResponseEntity<ApiCommonResponse> traLuongChoNhanVien(
+            @PathVariable("maThanhToanLuong") Long maThanhToanLuong
+    ) {
         return null;
     }
 }

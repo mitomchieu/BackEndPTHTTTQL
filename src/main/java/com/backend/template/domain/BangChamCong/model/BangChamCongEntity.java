@@ -36,7 +36,7 @@ public class BangChamCongEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     @JsonIgnore
-    private ThanhToanLuongEntity thanhToanLuongEntity;
+    private ThanhToanLuongEntity thanhToanLuongEntity;  
 
     public ThanhToanLuongEntity getThanhToanLuongEntity() {
         thanhToanLuongEntity.setBangChamCongEntity(null);
