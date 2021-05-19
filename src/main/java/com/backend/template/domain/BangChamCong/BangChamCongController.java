@@ -143,4 +143,8 @@ public class BangChamCongController {
     ) {
         return ResponseTool.GET_OK(this.bangChamCongService.getAllNhanVienTrongBangChamCong(maBangChamCong));
     }
+
+     public ResponseEntity<APIResponse> getBangChamCongChuaTrongBangThanhToan() {
+        return null;
+     }
 }

@@ -27,6 +27,9 @@ public class NhanVienEntity {
     @Column
     private String soTaiKhoanNganHang;
 
+    @Column
+    private  String nganHangThuHuong;
+
     @ManyToOne()
     @JoinColumn(name = "chiNhanh")
     private ChiNhanhEntity chiNhanh;
