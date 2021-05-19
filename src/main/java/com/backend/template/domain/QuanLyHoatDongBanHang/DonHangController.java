@@ -51,8 +51,6 @@ public class DonHangController {
     @Operation(summary = "Get all don hang", description = "role = ADMIN, USer", security = @SecurityRequirement(name = "bearer-jwt"))
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse> getAllDonHang(
-            @ParameterObject Pageable pageable,
-            @ParameterObject SearchParameter searchParameter
     ) throws BackendError {
         List<DonHangEntity> listDonHang = donHangService.findAll();
         return ResponseTool.GET_OK(new ArrayList<Object>(listDonHang), listDonHang.size());
@@ -62,8 +60,6 @@ public class DonHangController {
     @Operation(summary = "Get don hang by nhan vien", description =  "role = ADMIN", security = @SecurityRequirement(name = "bearer-jwt" ) )
     @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
     public ResponseEntity<APIPagingResponse>  getDonHangByNhanVien(
-            @ParameterObject Pageable pageable,
-            @ParameterObject SearchParameter searchParameter,
             @PathVariable("nhanVien") String nhanVien
     ) {
         List<DonHangEntity> listDonHang = donHangService.searchByNhanVien(nhanVien);
