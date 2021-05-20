@@ -14,8 +14,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DonHangEntity {
-    @Column
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long maDonHang;
 
     @Column
@@ -29,13 +30,21 @@ public class DonHangEntity {
 
     @Column
     private String tenMatHang;
-
-    @Column
-    private String thanhTien;
-
-    @Column
+    @Temporal(TemporalType.DATE)
     private Date ngayXuatDon;
 
     @Column
     private String nhanVienBan;
+
+    @Column
+    private Long soLuong;
+
+    @Column
+    private Double thanhTien;
+
+    @Column
+    private Double donGia;
+
+    @Column
+    private Double thue;
 }
