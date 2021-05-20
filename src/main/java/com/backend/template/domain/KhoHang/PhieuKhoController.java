@@ -1,8 +1,10 @@
 package com.backend.template.domain.KhoHang;
 
+import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.annotations.api.ApiCommonResponse;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.ResponseTool;
+import com.backend.template.base.common.response.model.APIPagingResponse;
 import com.backend.template.base.common.response.model.APIResponse;
 import com.backend.template.domain.HangHoa.HangHoaService;
 import com.backend.template.domain.HangHoa.model.HangHoaEntity;
@@ -14,6 +16,8 @@ import com.backend.template.domain.KhoHang.model.KhoHangEntity;
 import com.backend.template.domain.KhoHang.model.PhieuKhoEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +29,7 @@ import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("phieu-nhap-kho")
+@RequestMapping("phieu-kho")
 @ApiCommonResponse
 public class PhieuKhoController {
     @Autowired
@@ -39,6 +43,17 @@ public class PhieuKhoController {
     @Operation(summary = "Get loai phieu kho")
     public  ResponseEntity<APIResponse> getLoaiPhieuKho() {
         return ResponseTool.GET_OK(PhieuKhoEntity.ELoaiPhieuKho.values());
+    }
+
+    @GetMapping(path = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get all phieu kho", description =  "role = ADMIN, USER", security = @SecurityRequirement(name = "bearer-jwt" ) )
+    @PreAuthorize("@EndPointAuthorizer.authorizer({'ADMIN', 'USER'})")
+    public ResponseEntity<APIPagingResponse> getAllPhieuKho(
+            @ParameterObject Pageable pageable,
+            @ParameterObject SearchParameter searchParameter
+    ) throws BackendError {
+        APIPagingResponse result = this.phieuKhoService.getAll(pageable, searchParameter);
+        return ResponseTool.GET_OK(result.getData(), result.getTotal());
     }
 
     @PostMapping(path = "create-phieu-nhap-kho", produces = MediaType.APPLICATION_JSON_VALUE)
