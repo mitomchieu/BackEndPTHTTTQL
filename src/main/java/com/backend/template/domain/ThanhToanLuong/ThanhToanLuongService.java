@@ -1,6 +1,7 @@
 package com.backend.template.domain.ThanhToanLuong;
 
 import com.backend.template.base.common.BaseService;
+import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.domain.BangChamCong.model.BangChamCongEntity;
 import com.backend.template.domain.BangChamCong.model.NhanVienInBangChamCongEntity;
 import com.backend.template.domain.BangChamCong.model.QNhanVienInBangChamCongEntity;
@@ -15,11 +16,14 @@ import com.backend.template.domain.TienLuong.model.QTienLuongEntity;
 import com.backend.template.domain.TienLuong.model.TienLuongEntity;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,23 +62,95 @@ public class ThanhToanLuongService extends
     public  ThanhToanLuongEntity themVaoThanhToanLuong(
         ThanhToanLuongEntity thanhToanLuongEntity,
         BangChamCongEntity bangChamCongEntity
-    ) {
+    ) throws BackendError {
+        if (thanhToanLuongEntity.getTrangThaiThanhToan().name
+                == ThanhToanLuongEntity.ETrangThaiThanhToan.DATHANHTOAN.name) {
+            throw new BackendError(HttpStatus.BAD_REQUEST,
+                    "Đã được thanh toán, không được tính lại");
+        }
         em.joinTransaction();
         bangChamCongEntity.setThanhToanLuongEntity(thanhToanLuongEntity);
         em.merge(bangChamCongEntity);
         return thanhToanLuongEntity;
     }
 
+    public List<TienLuongEntity> getTienLuongBymaThanhToanLuong(
+            Long maThanhToanLuong
+    ) {
+        QTienLuongEntity qTienLuongEntity =
+                QTienLuongEntity.tienLuongEntity;
+        return  this.getJPAQueryFactory()
+                .selectFrom(qTienLuongEntity)
+                .where(qTienLuongEntity.thanhToanLuongEntity.maThanhToanLuong.eq(maThanhToanLuong))
+                .fetch();
+    }
+
+    public List<TienLuongEntity> getTienLuongByMaNhanVien(
+            String maNhanVien
+    ) {
+        QTienLuongEntity qTienLuongEntity =
+                QTienLuongEntity.tienLuongEntity;
+        return  this.getJPAQueryFactory()
+                .selectFrom(qTienLuongEntity)
+                .where(qTienLuongEntity.nhanVienEntity.maNhanVien.eq(maNhanVien))
+                .fetch();
+    }
+
+
+
     @Transactional
-    public  Boolean tinhLuong(Long maThanhToanLuong) {
+    public  Boolean tinhLuong(Long maThanhToanLuong) throws BackendError {
         ThanhToanLuongEntity thanhToanLuongEntity
                  = this.getByMaBangThanhToanLuong(maThanhToanLuong);
         return tinhLuong(thanhToanLuongEntity);
     }
 
     @Transactional
-    public Boolean tinhLuong(ThanhToanLuongEntity thanhToanLuongEntity) {
+    public  Boolean traLuong(Long maThanHToanLuong) throws BackendError {
         em.joinTransaction();
+        ThanhToanLuongEntity thanhToanLuongEntity
+                = this.getByMaBangThanhToanLuong(maThanHToanLuong);
+        if (thanhToanLuongEntity.getTrangThaiThanhToan().name
+                == ThanhToanLuongEntity.ETrangThaiThanhToan.DATHANHTOAN.name) {
+            throw new BackendError(HttpStatus.BAD_REQUEST,
+                    "Đã được thanh toán, không thể thanh toán thêm nwuax");
+        }
+        thanhToanLuongEntity.setNgayThanhToan(new Date());
+        thanhToanLuongEntity.setTrangThaiThanhToan(
+                ThanhToanLuongEntity.ETrangThaiThanhToan.DATHANHTOAN
+        );
+        thanhToanLuongEntity.setTongTien(
+                this.tinhTongTienTheoMaThanhToanLuong(maThanHToanLuong)
+        );
+        em.merge(thanhToanLuongEntity);
+        return true;
+    }
+
+    public Double tinhTongTienTheoMaThanhToanLuong(
+            Long maThanhToanLuong
+    ) {
+        QTienLuongEntity qTienLuongEntity
+                = QTienLuongEntity.tienLuongEntity;
+        Double result = this.getJPAQueryFactory()
+                .from(qTienLuongEntity)
+                .select(qTienLuongEntity.tienLuong.sum().as("tongTien"))
+                .where(qTienLuongEntity
+                .thanhToanLuongEntity
+                .maThanhToanLuong
+                .eq(maThanhToanLuong))
+                .fetchOne();
+        return result;
+    }
+
+
+    @Transactional
+    public Boolean tinhLuong(ThanhToanLuongEntity thanhToanLuongEntity) throws BackendError {
+        em.joinTransaction();
+        if (thanhToanLuongEntity.getTrangThaiThanhToan().name
+                == ThanhToanLuongEntity.ETrangThaiThanhToan.DATHANHTOAN.name) {
+            throw new BackendError(HttpStatus.BAD_REQUEST,
+                    "Đã được thanh toán, không được tính lại");
+        }
         QNhanVienInBangChamCongEntity qNhanVienInBangChamCongEntity
                 = QNhanVienInBangChamCongEntity.nhanVienInBangChamCongEntity;
         QTienLuongEntity qTienLuongEntity = QTienLuongEntity.tienLuongEntity;
@@ -114,7 +190,6 @@ public class ThanhToanLuongService extends
                     )
                 .fetch();
         for (Tuple  tongHeSo: listHeSo ) {
-            System.out.println(tongHeSo);
             String maNhanVen = (String) tongHeSo.toArray()[0];
             NhanVienEntity nhanVienEntity = nhanVienService.getByMaNhanVien(maNhanVen);
             BangLuongEntity bangLuongEntity = bangLuongService.getByMaNhanVien(maNhanVen);
@@ -130,10 +205,6 @@ public class ThanhToanLuongService extends
             em.persist(tienLuongEntity);
         }
         return true;
-    }
-
-    public TienLuongEntity createTienLuongEntity() {
-        return  null;
     }
 
 }

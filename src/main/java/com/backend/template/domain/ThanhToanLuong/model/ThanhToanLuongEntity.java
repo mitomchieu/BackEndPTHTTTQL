@@ -47,7 +47,7 @@ public class ThanhToanLuongEntity {
     private  ETrangThaiThanhToan trangThaiThanhToan;
 
     @Column
-    private Long tongTien;
+    private Double tongTien;
 
     @OneToMany(mappedBy = "thanhToanLuongEntity")
     private Set<BangChamCongEntity> bangChamCongEntity;
