@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import com.backend.template.base.common.ParameterObject.SearchParameter;
 import com.backend.template.base.common.exception.BackendError;
 import com.backend.template.base.common.response.model.APIPagingResponse;
+import com.backend.template.domain.BangLuong.model.BangLuongEntity;
 import com.backend.template.domain.QuanLyQuy.model.ThuTienEntity;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Order;

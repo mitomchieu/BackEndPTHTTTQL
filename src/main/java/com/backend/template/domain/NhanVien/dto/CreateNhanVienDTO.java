@@ -20,4 +20,5 @@ public class CreateNhanVienDTO {
     protected Date ngaySinh;
     private String soTaiKhoanNganHang;
     private String maChiNhanh;
+    private  String nganHangThuHuong;
 }
